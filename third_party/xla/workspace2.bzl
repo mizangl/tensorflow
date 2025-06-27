@@ -45,9 +45,10 @@ def _tf_repositories():
     # LINT.IfChange
     tf_http_archive(
         name = "XNNPACK",
-        sha256 = "8665f9876227fc1f5aaea9ca46bd24dac65d85053a510a6e71857ee32055e126",
-        strip_prefix = "XNNPACK-0a3103ab29306b25a6d1293a746945754a556b9c",
-        urls = tf_mirror_urls("https://github.com/google/XNNPACK/archive/0a3103ab29306b25a6d1293a746945754a556b9c.zip"),
+        sha256 = "1c532db6db8a3511a812f509643cee0193e8434bfd1a0c83143f3329395688ca",
+        strip_prefix = "XNNPACK-8b3d5687eb8e4a266731ad8a288de6c813c2959b",
+        urls = tf_mirror_urls("https://github.com/google/XNNPACK/archive/8b3d5687eb8e4a266731ad8a288de6c813c2959b.zip"),
+        patches = ["//third_party:xnnpack_android_patch.diff"],
     )
     # LINT.ThenChange(//tensorflow/lite/tools/cmake/modules/xnnpack.cmake)
 
