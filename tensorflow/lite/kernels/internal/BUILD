@@ -217,6 +217,7 @@ cc_library(
         "optimized/sparse_ops/fully_connected.h",
         "reduce_common.h",
     ],
+    includes = ["third_party/arm_neon_2_x86_sse"],
     compatible_with = get_compatible_with_portable(),
     copts = tflite_copts(),
     defines = ["EIGEN_NEON_GEBP_NR=4"],
@@ -976,6 +977,7 @@ cc_library(
     deps = [
         ":cpu_check",
         ":tensor_utils_no_eigen",
+        ":sse_tensor_utils",
         "//tensorflow/lite/core/c:common",
         "@eigen_archive//:eigen3",
     ] + selects.with_or({
@@ -986,7 +988,7 @@ cc_library(
             ":x86_any",
         ): [
             ":portable_tensor_utils",  # If SSSE3 isn't available, we fall back to portable
-            ":sse_tensor_utils",
+            #":sse_tensor_utils",
         ],
         (
             "//tensorflow/lite:tf_lite_static_memory",
@@ -1261,12 +1263,15 @@ cc_library(
         "optimized/neon_check.h",
         "optimized/sse_check.h",
     ],
+    includes = ["third_party/arm_neon_2_x86_sse"],
     compatible_with = get_compatible_with_portable(),
     copts = tflite_copts(),
     deps = select({
         ":x86_any": ["@arm_neon_2_x86_sse"],
         "//conditions:default": [],
-    }),
+    }) + [
+        "//third_party/arm_neon_2_x86_sse:neon_2_sse_headers",
+    ],
 )
 
 cc_library(

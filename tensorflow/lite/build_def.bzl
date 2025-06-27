@@ -193,11 +193,15 @@ def tflite_linkopts_no_undefined():
     )
 
 def tflite_pagesize_linkopts():
-    """Defines linker flags for setting the page size."""
+    """Defines linker flags for setting the page size for 16KB support on 64-bit ABIs only."""
     return select({
-        clean_dep("//tensorflow:android"): [
+        clean_dep("//tensorflow:android_arm64"): [
             "-Wl,-z,max-page-size=16384",
         ],
+        clean_dep("//tensorflow:android_x86_64"): [
+            "-Wl,-z,max-page-size=16384",
+        ],
+        # Do not set for 32-bit ABIs
         "//conditions:default": [],
     })
 
@@ -212,7 +216,6 @@ def tflite_jni_linkopts():
 def tflite_jni_binary(
         name,
         copts = tflite_copts(),
-        linkopts = tflite_jni_linkopts(),
         linkscript = LINKER_SCRIPT,
         exported_symbols = EXPORTED_SYMBOLS,
         stamp = -1,
@@ -226,18 +229,22 @@ def tflite_jni_binary(
         local_defines = [],
         exec_properties = {}):
     """Builds a jni binary for TFLite."""
-    linkopts = linkopts + select({
-        clean_dep("//tensorflow:macos"): [
-            "-Wl,-exported_symbols_list,$(location {})".format(exported_symbols),
-            "-Wl,-install_name,@rpath/" + name,
+    linkopts = select({
+        clean_dep("//tensorflow:android_arm64"): [
+            "-Wl,-z,max-page-size=16384",
         ],
-        clean_dep("//tensorflow:windows"): [],
+        clean_dep("//tensorflow:android_x86_64"): [
+            "-Wl,-z,max-page-size=16384",
+        ],
+        clean_dep("//tensorflow:android"): [],
         "//conditions:default": [
             "-Wl,--version-script,$(location {})".format(linkscript),
             # copybara:uncomment_begin(google-only)
             # "-Wl,--undefined-version",
             # copybara:uncomment_end
             "-Wl,-soname," + name,
+            "-Wl,-exported_symbols_list,$(location {})".format(exported_symbols),
+            "-Wl,-install_name,@rpath/" + name,
         ],
     })
     native.cc_binary(

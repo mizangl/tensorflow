@@ -170,6 +170,8 @@ build:clang_local --repo_env USE_HERMETIC_CC_TOOLCHAIN=0
 # Print a stacktrace when a test is killed
 test --test_env="GTEST_INSTALL_FAILURE_SIGNAL_HANDLER=1"
 
+# Ensure NEON_2_SSE.h is found for all builds
+build --copt=-Ithird_party/arm_neon_2_x86_sse
 
 # Default options should come above this line.
 

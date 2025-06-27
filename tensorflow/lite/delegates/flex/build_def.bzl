@@ -305,7 +305,6 @@ def tflite_flex_jni_library(
     # The library name is fixed as libtensorflowlite_flex_jni.so in FlexDelegate.java.
     tflite_jni_binary(
         name = "libtensorflowlite_flex_jni.so",
-        linkopts = tflite_jni_linkopts(),
         testonly = testonly,
         deps = [
             ":%s_flex_native" % name,

@@ -321,6 +321,7 @@ cc_library(
     name = "quantization_util",
     srcs = ["quantization_util.cc"],
     hdrs = ["quantization_util.h"],
+    includes = ["third_party/arm_neon_2_x86_sse"],
     compatible_with = get_compatible_with_portable(),
     copts = tflite_copts(),
     deps = [
@@ -328,6 +329,7 @@ cc_library(
         "//tensorflow/lite/kernels/internal:reference_base",
         "//tensorflow/lite/kernels/internal:types",
         "@FP16",
+        "//third_party/arm_neon_2_x86_sse:neon_2_sse_headers",
     ],
 )
 
