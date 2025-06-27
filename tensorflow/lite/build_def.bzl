@@ -198,6 +198,9 @@ def tflite_pagesize_linkopts():
         clean_dep("//tensorflow:android_arm64"): [
             "-Wl,-z,max-page-size=16384",
         ],
+        clean_dep("//tensorflow:android_x86_64"): [
+            "-Wl,-z,max-page-size=16384",
+        ],
         "//conditions:default": [],
     })
 
